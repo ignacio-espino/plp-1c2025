@@ -24,7 +24,11 @@ testsEj2 =
   test
     [ vacio <+> vacio ~?= vacio,
       texto "a" <+> texto "b" ~?= texto "ab",
-      (texto "a" <+> linea) <+> texto "b" ~?= texto "a" <+> (linea <+> texto "b")
+      (texto "a" <+> linea) <+> texto "b" ~?= texto "a" <+> (linea <+> texto "b"),
+      texto "a" <+> vacio ~?= texto "a",
+      texto "a" <+> vacio <+> texto "b" ~?= texto "ab",
+      (linea <+> texto "a") <+> linea ~?= linea <+> (texto "a" <+> linea),
+      texto "a" <+> texto "b" <+> vacio ~?= texto "ab"
     ]
 
 testsEj3 :: Test
