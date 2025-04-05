@@ -53,7 +53,10 @@ indentar :: Int -> Doc -> Doc
 indentar i d = foldDoc Vacio (\s d' -> Texto s d') (\indPrev d' -> Linea (indPrev + i) d') d
 
 mostrar :: Doc -> String
-mostrar = error "PENDIENTE: Ejercicio 4"
+mostrar d = foldDoc "" cTexto cLinea d
+    where
+        cTexto str oldstr = str ++ oldstr
+        cLinea num oldstr = "\n" ++ replicate num " " ++ oldstr
 
 -- | Función dada que imprime un documento en pantalla
 
