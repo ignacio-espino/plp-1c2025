@@ -9,7 +9,13 @@ data PPON
   deriving (Eq, Show)
 
 pponAtomico :: PPON -> Bool
-pponAtomico = error "PENDIENTE: Ejercicio 5"
+pponAtomico p = case p of
+    TextoPP _ -> True
+    IntPP _ -> True
+    ObjetoPP _ -> False
+
+-- Aca capaz se puede hacer mas conciso haciendo ObjetoPP _ = False y todo lo demas True.. pero lo escribi
+-- y lo deje asi porque me gusta ser extensivo (?) pueden cambiarlo si gustan.
 
 pponObjetoSimple :: PPON -> Bool
 pponObjetoSimple = error "PENDIENTE: Ejercicio 6"
