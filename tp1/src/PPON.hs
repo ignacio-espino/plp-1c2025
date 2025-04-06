@@ -32,8 +32,19 @@ foldPpon cTexto cInt cObjeto pp = case pp of
     where
         rec = foldPpon cTexto cInt cObjeto
 
+-- Este ejercicio lo dividi en dos: le agrego el separador a todos los elementos menos el ultim y
+-- despues los concateno en un documento final
+
+agregarATodosMenosAlUltimo :: Doc -> [Doc] -> [Doc]
+agregarATodosMenosAlUltimo separador ld =
+  case ld of
+    []  -> []
+    [x] -> [x]
+    _   -> map (<+> separador) (init ld) ++ [last ld]
+
 intercalar :: Doc -> [Doc] -> Doc
-intercalar = error "PENDIENTE: Ejercicio 7"
+intercalar separador documentos = foldr (<+>) vacio (agregarATodosMenosAlUltimo separador documentos)
+
 
 entreLlaves :: [Doc] -> Doc
 entreLlaves [] = texto "{ }"
