@@ -30,7 +30,7 @@ entreLlaves ds =
     <+> texto "}"
 
 aplanar :: Doc -> Doc
-aplanar = error "PENDIENTE: Ejercicio 8"
+aplanar = foldDoc vacio (\str rec -> texto str <+> rec) (\num rec -> texto " " <+> rec)
 
 pponADoc :: PPON -> Doc
 pponADoc = error "PENDIENTE: Ejercicio 9"
