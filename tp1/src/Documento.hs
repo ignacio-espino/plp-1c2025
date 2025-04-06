@@ -56,7 +56,7 @@ mostrar :: Doc -> String
 mostrar d = foldDoc "" cTexto cLinea d
     where
         cTexto str oldstr = str ++ oldstr
-        cLinea num oldstr = "\n" ++ replicate num " " ++ oldstr
+        cLinea num oldstr = "\n" ++ replicate num ' ' ++ oldstr
 
 -- | Función dada que imprime un documento en pantalla
 
