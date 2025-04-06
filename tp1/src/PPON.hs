@@ -18,7 +18,19 @@ pponAtomico p = case p of
 -- y lo deje asi porque me gusta ser extensivo (?) pueden cambiarlo si gustan.
 
 pponObjetoSimple :: PPON -> Bool
-pponObjetoSimple = error "PENDIENTE: Ejercicio 6"
+pponObjetoSimple (ObjetoPP listaPares) = all (pponAtomico . snd) listaPares
+pponObjetoSimple _ = False
+
+-- Agregue un fold porque pense que pponObjetoSimple iba por ese lado pero no me salio y quedo la implementacion
+-- de arriba. si a alguno se le ocurre como hacerlo con foldPpon joya. Lo pusheo para tenerlo porque asumo que va a ser
+-- necesario despues
+foldPpon :: b -> b -> ([(String, b)] -> b) -> PPON -> b
+foldPpon cTexto cInt cObjeto pp = case pp of
+    TextoPP _ -> cTexto
+    IntPP _ -> cInt
+    ObjetoPP listaPares -> cObjeto (map (\(str, ppon') -> (str, rec ppon')) listaPares)
+    where
+        rec = foldPpon cTexto cInt cObjeto
 
 intercalar :: Doc -> [Doc] -> Doc
 intercalar = error "PENDIENTE: Ejercicio 7"
