@@ -29,9 +29,12 @@ texto [] = Vacio
 texto t = Texto t Vacio
 
 foldDoc :: b -> (String -> b -> b) -> (Int -> b -> b) -> Doc -> b
-foldDoc cVacio cTexto cLinea Vacio = cVacio
-foldDoc cVacio cTexto cLinea (Texto s doc) = cTexto s (rec doc) where rec = foldDoc cVacio cTexto cLinea
-foldDoc cVacio cTexto cLinea (Linea n doc) = cLinea n (rec doc) where rec = foldDoc cVacio cTexto cLinea
+foldDoc cVacio cTexto cLinea d = case d of
+  Vacio -> cVacio
+  Texto t d' -> cTexto t (rec d')
+  Linea i d' -> cLinea i (rec d')
+  where
+    rec = foldDoc cVacio cTexto cLinea
 
 -- NOTA: Se declara `infixr 6 <+>` para que `d1 <+> d2 <+> d3` sea equivalente a `d1 <+> (d2 <+> d3)`
 -- También permite que expresiones como `texto "a" <+> linea <+> texto "c"` sean válidas sin la necesidad de usar paréntesis.
@@ -58,10 +61,13 @@ d1 <+> d2 =
     d1
 
 indentar :: Int -> Doc -> Doc
-indentar i = error "PENDIENTE: Ejercicio 3"
+indentar i d = foldDoc Vacio (\s d' -> Texto s d') (\indPrev d' -> Linea (indPrev + i) d') d
 
 mostrar :: Doc -> String
-mostrar = error "PENDIENTE: Ejercicio 4"
+mostrar d = foldDoc "" cTexto cLinea d
+  where
+    cTexto str oldstr = str ++ oldstr
+    cLinea num oldstr = "\n" ++ replicate num ' ' ++ oldstr
 
 -- | Función dada que imprime un documento en pantalla
 
