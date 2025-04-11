@@ -10,19 +10,18 @@ data PPON
 
 pponAtomico :: PPON -> Bool
 pponAtomico p = case p of
-  TextoPP _ -> True
-  IntPP _ -> True
   ObjetoPP _ -> False
-
--- Aca capaz se puede hacer mas conciso haciendo ObjetoPP _ = False y todo lo demas True.. pero lo escribi
--- y lo deje asi porque me gusta ser extensivo (?) pueden cambiarlo si gustan.
+  _ -> True
 
 pponObjetoSimple :: PPON -> Bool
-pponObjetoSimple (ObjetoPP listaPares) = all (pponAtomico . snd) listaPares
-pponObjetoSimple _ = False
+pponObjetoSimple ppon = case ppon of
+  ObjetoPP listaPares -> all (pponAtomico . snd) listaPares
+  _ -> False
 
--- Este ejercicio lo dividi en dos: le agrego el separador a todos los elementos menos el ultim y
--- despues los concateno en un documento final
+-- Este ejercicio lo dividimos en dos: Agregamos el separador a todos los elementos menos el ultimo y
+-- luego los concatenamos en un documento final
+intercalar :: Doc -> [Doc] -> Doc
+intercalar separador documentos = foldr (<+>) vacio (agregarATodosMenosAlUltimo separador documentos)
 
 agregarATodosMenosAlUltimo :: Doc -> [Doc] -> [Doc]
 agregarATodosMenosAlUltimo separador ld =
@@ -30,9 +29,6 @@ agregarATodosMenosAlUltimo separador ld =
     [] -> []
     [x] -> [x]
     _ -> map (<+> separador) (init ld) ++ [last ld]
-
-intercalar :: Doc -> [Doc] -> Doc
-intercalar separador documentos = foldr (<+>) vacio (agregarATodosMenosAlUltimo separador documentos)
 
 entreLlaves :: [Doc] -> Doc
 entreLlaves [] = texto "{ }"
@@ -47,42 +43,25 @@ entreLlaves ds =
     <+> texto "}"
 
 aplanar :: Doc -> Doc
-aplanar = foldDoc vacio (\str rec -> texto str <+> rec) (\num rec -> texto " " <+> rec)
+aplanar = foldDoc vacio ((<+>) . texto) (\_ rec -> texto " " <+> rec)
 
-foldPpon :: (String -> b) -> (Int -> b) -> ([(String, b)] -> b) -> PPON -> b
-foldPpon cTexto cInt cObjeto pp = case pp of
+recrPPON :: (String -> b) -> (Int -> b) -> ([(String, PPON)] -> [(String, b)] -> b) -> PPON -> b
+recrPPON cTexto cInt cObjeto pp = case pp of
   TextoPP text -> cTexto text
   IntPP num -> cInt num
-  ObjetoPP listaPares -> cObjeto (map (\(str, ppon') -> (str, rec ppon')) listaPares)
+  ObjetoPP listaPares -> cObjeto listaPares (map (\(str, ppon') -> (str, rec ppon')) listaPares)
   where
-    rec = foldPpon cTexto cInt cObjeto
+    rec = recrPPON cTexto cInt cObjeto
 
+{--
+  pponADoc usa recursión primitiva, debido a que estamos accediendo a la sub-estructura del objeto(en este caso, la lista de pares),
+  en adición a acceder al resultado de la recursión.
+  Esto puede verse en recrPPON.
+-}
 pponADoc :: PPON -> Doc
-pponADoc ppon = fst (foldPpon (\txt -> (texto (show txt), True)) (\num -> (texto (show num), True)) cObjeto ppon)
+pponADoc = recrPPON (texto . show) (texto . show) cObjeto
 
-cObjeto :: [(String, (Doc, Bool))] -> (Doc, Bool)
-cObjeto recs = (if all (snd . snd) recs then cObjetoPPONSimple (sacarFlagAtomico recs) else cObjetoPPONComplejo (sacarFlagAtomico recs), False)
+cObjeto :: ([(String, PPON)] -> [(String, Doc)] -> Doc)
+cObjeto listaPares recs = if all (pponAtomico . snd) listaPares then aplanar (entreLlaves (recsADocs recs)) else entreLlaves (recsADocs recs)
   where
-    sacarFlagAtomico = map (\(x, (y, z)) -> (x, y))
-
-cObjetoPPONSimple :: [(String, Doc)] -> Doc
-cObjetoPPONSimple recs = texto "{" <+> accumPPONSimple recs <+> texto " }"
-
-accumPPONSimple :: [(String, Doc)] -> Doc
-accumPPONSimple xxs = case xxs of
-  [] -> vacio
-  [x] -> texto ("\"" ++ fst x ++ "\": ") <+> snd x
-  (x : xs) -> texto (" \"" ++ label ++ "\": ") <+> doc <+> texto ", " <+> accumPPONSimple xs
-    where
-      label = fst x; doc = snd x
-
-cObjetoPPONComplejo :: [(String, Doc)] -> Doc
-cObjetoPPONComplejo recs = texto "{" <+> indentar 2 (linea <+> accumPPON recs) <+> linea <+> texto "}"
-
-accumPPON :: [(String, Doc)] -> Doc
-accumPPON xxs = case xxs of
-  [] -> vacio
-  [x] -> texto ("\"" ++ fst x ++ "\": ") <+> snd x
-  (x : xs) -> texto ("\"" ++ label ++ "\": ") <+> doc <+> texto "," <+> linea <+> accumPPON xs
-    where
-      label = fst x; doc = snd x
+    recsADocs = map (\(label, doc) -> texto ("\"" ++ label ++ "\": ") <+> doc) -- Formateamos etiqueta y objeto a un Documento.
