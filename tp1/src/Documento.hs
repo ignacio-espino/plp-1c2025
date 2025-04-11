@@ -61,12 +61,11 @@ d1 <+> d2 =
     d1
 
 indentar :: Int -> Doc -> Doc
-indentar i d = foldDoc Vacio (\s d' -> Texto s d') (\indPrev d' -> Linea (indPrev + i) d') d
+indentar i = foldDoc Vacio Texto (Linea . (i +))
 
 mostrar :: Doc -> String
-mostrar d = foldDoc "" cTexto cLinea d
+mostrar = foldDoc "" (++) cLinea
   where
-    cTexto str oldstr = str ++ oldstr
     cLinea num oldstr = "\n" ++ replicate num ' ' ++ oldstr
 
 -- | Función dada que imprime un documento en pantalla
