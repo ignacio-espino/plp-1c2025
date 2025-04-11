@@ -60,7 +60,15 @@ d1 <+> d2 =
     Linea
     d1
 
+{-
+El invariante del documento para el caso linea se mantiene debido a que el documento provisto lo cumple
+y el parámetro de cuanta indentación se agrega es positivo.
+
+El invariante de texto se cumple devido a que el documento provisto ya lo cumple
+y el documento resultante se obtiene mediante los constructores del tipo.
+-}
 indentar :: Int -> Doc -> Doc
+indentar i _ | i < 0 = error "El indentado no puede ser negativo."
 indentar i d = foldDoc Vacio (\s d' -> Texto s d') (\indPrev d' -> Linea (indPrev + i) d') d
 
 mostrar :: Doc -> String

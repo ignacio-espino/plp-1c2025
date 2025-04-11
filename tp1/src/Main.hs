@@ -103,5 +103,5 @@ testsEj9 =
       mostrar (pponADoc familias) ~?= "{\n  \"Addams\": {\n    \"0\": { \"nombre\": \"Pericles\", \"edad\": 30 },\n    \"1\": { \"nombre\": \"Merlina\", \"edad\": 24 }\n  }\n}",
       mostrar (pponADoc (IntPP 5)) ~?= "5",
       mostrar (pponADoc (TextoPP "abc")) ~?= "\"abc\"",
-      mostrar (pponADoc (ObjetoPP [])) ~?= "{\n\n}"
+      mostrar (pponADoc (ObjetoPP [])) ~?= "{ }"
     ]
