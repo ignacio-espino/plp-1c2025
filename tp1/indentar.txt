@@ -100,7 +100,6 @@ indentar m (Linea k d)
 Vamos a demostrar ahora la propiedad sobre la estructura de Documento
 
 Caso base:
-
 Queremos ver que:
 
 indentar n (indentar m Vacio) = indentar (n+m) Vacio
@@ -116,22 +115,14 @@ Por otro lado:
 indentar (n+m) Vacio
 (Lema1)= Vacio
 
-TODO: chequear si está ok esta demo.
-
-
 Caso inductivo:
-
-
 Queremos ver que:
-
 
 ∀s :: String. ∀d :: Doc. (P(d) ⇒ P(Texto s d)).
 con P(d) :≡ indentar n (indentar m d) = indentar (n+m) d
 
-
 indentar n (indentar m (Texto s d))
 (Lema2)= indentar n (Texto s (indentar m d))
-= indentar n Texto s (indentar m d)    ---TODO: está correcto este paso?? solo saqué ()
 (Lema2)= Texto s (indentar n (indentar m d))
 (HI)= Texto s (indentar (n+m) d)
 (Lema2)= indentar (n+m) (Texto s d)
@@ -139,16 +130,13 @@ indentar n (indentar m (Texto s d))
 
 Queremos ver que:
 
-
 ∀k :: Int. ∀d :: Doc. (P(d) ⇒ P(Linea k d)).
 con P(d) :≡ indentar n (indentar m d) = indentar (n+m) d
 
-
 indentar n (indentar m (Linea k d))
 (Lema3)= indentar n (Linea (m+k) (indentar m d))
-= indentar n Linea (m+k) (indentar m d)  ---TODO: está correcto este paso?? solo saqué ()
-(Lema3)= Linea (n+(m+k)) indentar n (indentar m d)
-(HI)= Linea (n+(m+k)) indentar (n+m) d
+(Lema3)= Linea (n+(m+k)) (indentar n (indentar m d))
+(HI)= Linea (n+(m+k)) (indentar (n+m) d)
 = Linea (n+(m+k)) (indentar (n+m) d)
 (Lema3)= indentar (n+m) (Linea k d)
 
