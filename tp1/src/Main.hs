@@ -89,9 +89,9 @@ testsEj8 :: Test
 testsEj8 =
   test
     [ mostrar (aplanar (a <+> linea <+> b <+> linea <+> c)) ~?= "a b c",
-      mostrar (aplanar (vacio)) ~?= "",
-      mostrar (aplanar (linea)) ~?= " ",
-      mostrar (aplanar (a <+> (indentar 5 (linea <+> a)))) ~?= "a a",
+      mostrar (aplanar vacio) ~?= "",
+      mostrar (aplanar linea) ~?= " ",
+      mostrar (aplanar (a <+> indentar 5 (linea <+> a))) ~?= "a a",
       mostrar (aplanar (intercalar (indentar 5 linea) [a, linea, a])) ~?= "a   a"
     ]
 
