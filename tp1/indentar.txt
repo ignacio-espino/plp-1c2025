@@ -1,0 +1,100 @@
+Ejercicio 10
+
+Demostar utilizando razonamiento ecuacional e inducción estructural que para todo n, m :: Int positivos y x :: Doc,
+
+indentar n (indentar m x) = indentar (n+m) x
+
+
+Lemas:
+
+1) indentar k Vacio = Vacio para todo k :: Int positivo.
+
+2) indentar k (Texto s d) = Texto s (indentar k d) para todo k :: Int positivo, s :: String y d :: Doc.
+
+3) indentar m (Linea k d) = Linea (m+k) (indentar m d) para todo m, k :: Int positivos y d :: Doc.
+
+
+Por el principio de inducción estructural, si probamos que la propiedad indentar (llamémosla Ind):
+
+* Ind vale sobre todos los constructores base de Doc, (el único constructor base es Vacio), es decir, si vale Ind(Vacio)
+* Ind vale sobre todos los constructores recursivos de Doc (Texto s d, Linea k d), asumiendo como hipótesis inductiva que vale para los parámetros de tipo Doc; es decir
+	* ∀ d::Doc . (Ind(d)) ⇒ Ind(Texto s d)
+	* ∀ d::Doc . (Ind(d)) ⇒ Ind(Linea k d)
+
+entonces tenemos que ∀ x :: Doc. Ind(x)
+
+
+Definicion de Documento:
+
+data Doc = Vacio | Texto String Doc | Linea Int Doc
+
+Funciones para construir documentos:
+
+-- | Devuelve un documento vacı́o
+vacio :: Doc
+vacio = Vacio
+
+-- | Devuelve un documento que consta de un salto de linea.
+linea :: Doc
+linea = Linea 0 Vacio
+
+-- | Devuelve un documento que consta del texto dado.
+-- PRE: El texto no debe contener saltos de lı́nea.
+texto :: String -> Doc
+texto t | ’\n’ ‘elem‘ t = error "El texto no debe contener saltos de lı́nea"
+texto [] = Vacio
+texto t = Texto t Vacio
+
+
+
+Definiciones:
+
+
+foldDoc :: b -> (String -> b -> b) -> (Int -> b -> b) -> Doc -> b
+foldDoc cVacio cTexto cLinea d = case d of
+(f1)  Vacio -> cVacio
+(f2)  Texto t d' -> cTexto t (rec d')
+(f3)  Linea i d' -> cLinea i (rec d')
+	  where
+    	rec = foldDoc cVacio cTexto cLinea
+
+
+
+
+	 indentar :: Int -> Doc -> Doc
+(i1) indentar i d = foldDoc Vacio (\s d' -> Texto s d') (\indPrev d' -> Linea (indPrev + i) d') d
+
+
+
+
+Demostraciones:
+
+1) indentar k Vacio = Vacio para todo k :: Int positivo.
+
+
+indentar k Vacio 
+(i1)= foldDoc Vacio (\s d' -> Texto s d') (\indPrev d' -> Linea (indPrev + k) d') Vacio
+(f1)= Vacio 
+
+
+2) indentar k (Texto s d) = Texto s (indentar k d) para todo k :: Int positivo, s :: String y d :: Doc.
+
+
+indentar k (Texto s d)
+(i1)= foldDoc Vacio (\s' d' -> Texto s' d') (\indPrev d' -> Linea (indPrev + k) d') (Texto s d)
+(f2)= (\s' d' -> Texto s' d') s foldDoc Vacio (\s' d' -> Texto s' d') (\indPrev d' -> Linea (indPrev + k) d') d
+(i1)= (\s' d' -> Texto s' d') s (indentar k d)
+= Texto s (indentar k d)
+
+
+3) indentar m (Linea k d) = Linea (m+k) (indentar m d) para todo m, k :: Int positivos y d :: Doc.
+
+indentar m (Linea k d)
+(i1) = foldDoc Vacio (\s' d' -> Texto s' d') (\indPrev d' -> Linea (indPrev + m) d') (Linea k d)
+(f3) = (\indPrev d' -> Linea (indPrev + m) d') k (foldDoc Vacio (\s' d' -> Texto s' d') (\indPrev d' -> Linea (indPrev + m) d') d)
+(i1) = (\indPrev d' -> Linea (indPrev + m) d') k (indentar m d)
+= Linea (k+m) (indentar m d)
+
+
+TODO: falta demostrar el paso inductivo???
+
