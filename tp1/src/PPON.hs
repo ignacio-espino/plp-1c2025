@@ -30,9 +30,6 @@ agregarATodosMenosAlUltimo separador ld =
     [x] -> [x]
     _ -> map (<+> separador) (init ld) ++ [last ld]
 
-intercalar :: Doc -> [Doc] -> Doc
-intercalar separador documentos = foldr (<+>) vacio (agregarATodosMenosAlUltimo separador documentos)
-
 entreLlaves :: [Doc] -> Doc
 entreLlaves [] = texto "{ }"
 entreLlaves ds =

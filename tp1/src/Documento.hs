@@ -69,7 +69,7 @@ y el documento resultante se obtiene mediante los constructores del tipo.
 -}
 indentar :: Int -> Doc -> Doc
 indentar i _ | i < 0 = error "El indentado no puede ser negativo."
-indentar i = foldDoc Vacio Texto (Linea . (i +))
+indentar i d = foldDoc Vacio Texto (Linea . (i +)) d
 
 mostrar :: Doc -> String
 mostrar = foldDoc "" (++) cLinea
