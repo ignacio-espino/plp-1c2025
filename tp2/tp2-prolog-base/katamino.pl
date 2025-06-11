@@ -26,24 +26,20 @@ sublista(Descartar, Tomar, L, R) :- append(L1, L2, L),
 % Ejercicio 2
 
 
-Escribir un predicado tablero(+K, -T) que genera un tablero vac´ıo de K > 0 columnas. El tablero ser´a una
-matriz de 5 × K representada como lista de filas. Cada casilla del tablero debe ser una variable no instanciada
-distinta.
-?- tablero(3, T)
-T = [[_,_,_],[_,_,_],[_,_,_],[_,_,_],[_,_,_]].
+% Predicado que genera una fila F con N columnas, con N>0
+% fila(+N, -F)
+fila(1, [_]).
+fila(N, [_|F]) :- N>1, N1 is N-1, fila(N1,F).
+
+% Predicado que arma una matriz T de N filas x M columnas
+% tableroGenerico(+N,+M,-T)
+tableroGenerico(0,_,[]).
+tableroGenerico(N,M,[F|T]) :- N>0, fila(M,F), N1 is N-1, tableroGenerico(N1,M,T).
+
 
 % Tablero vacío de K>0 columnas y 5 filas.
 % tablero(+K, -T)
-tablero(1, T) :- [[_],[_],[_],[_],[_]]
-tablero(K, T) :- long(T,5), append(L1, L2, T)
-
-
-% Idea: iterar sobre K??? usando tablero(K-1, T) y agregando a cada fila una columna extra??
-
-
-
-
-
+tablero(K,T) :- tableroGenerico(5, K, T).
 
 
 
