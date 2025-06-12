@@ -3,19 +3,11 @@
 
 % Ejercicio 1
 
-
-%! long(+L, ?N)
-long([], 0).
-long([_|T], N) :- long(T, M), N is 1 + M.
-
-append([],L,L).
-append([X|L1],L2,[X|L3]) :- append(L1,L2,L3).
-
 % sublista(+Descartar, +Tomar, +L, -R)
 sublista(Descartar, Tomar, L, R) :- append(L1, L2, L), 
-									long(L1, Descartar), 
+									length(L1, Descartar), 
 									append(R, _, L2), 
-									long(R, Tomar).
+									length(R, Tomar).
 
 % La idea es dividir a la lista L en dos, 
 % la lista de los elementos que se descartan y el resto,
@@ -24,7 +16,6 @@ sublista(Descartar, Tomar, L, R) :- append(L1, L2, L),
 
 
 % Ejercicio 2
-
 
 % Predicado que genera una fila F con N columnas, con N>0
 % fila(+N, -F)
@@ -42,4 +33,7 @@ tableroGenerico(N,M,[F|T]) :- N>0, fila(M,F), N1 is N-1, tableroGenerico(N1,M,T)
 tablero(K,T) :- tableroGenerico(5, K, T).
 
 
+% Ejercicio 3
+%! tamaño(+T,-F,-C)
 
+tamaño([F1|T], F, C) :- length(T, A), F is A+1, length(F1, C). 
