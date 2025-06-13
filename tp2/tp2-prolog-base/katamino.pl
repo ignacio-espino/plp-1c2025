@@ -37,3 +37,9 @@ tablero(K,T) :- tableroGenerico(5, K, T).
 %! tamaño(+T,-F,-C)
 
 tamaño([F1|T], F, C) :- length(T, A), F is A+1, length(F1, C). 
+
+% Ejercicio 4
+%! coordenadas(+T, -IJ)
+% I indica fila, J indica columna
+
+coordenadas(T,(I,J)) :- tamaño(T, F, C), numlist(1, F, LFs), numlist(1, C, LCs), member(I, LFs), member(J, LCs).
