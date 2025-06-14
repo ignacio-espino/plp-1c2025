@@ -41,5 +41,17 @@ tamaño([F1|T], F, C) :- length(T, A), F is A+1, length(F1, C).
 % Ejercicio 4
 %! coordenadas(+T, -IJ)
 % I indica fila, J indica columna
-
 coordenadas(T,(I,J)) :- tamaño(T, F, C), between(1, F, I), between(1, C, J).
+
+% Ejercicio 5
+
+%! kPiezas(+K, -PS)
+kPiezas(K, PS) :- nombrePiezas(L), tomar(K, L, PS).
+
+%! tomar(+N, +Universo, -Seleccion)
+tomar(0, [], []).
+tomar(N, [H|T], [H|PS]) :- Nant is N-1, hayAlMenos(Nant, T), tomar(Nant, T, PS). 
+tomar(N, [_|T], PS) :- hayAlMenos(N, T), tomar(N, T, PS). 
+
+% hayAlMenos(+N, +L)
+hayAlMenos(N, L) :- length(L, LLen), LLen >= N.
