@@ -77,3 +77,7 @@ ubicarPiezas(T, Poda, Ids) :- poda(Poda, T), maplist(ubicarPieza(T), Ids).
 
 poda(sinPoda, _).
 
+% Ejercicio 9
+%! llenarTablero(+Poda, +Columnas, -Tablero).
+
+llenarTablero(Poda, Columnas, T) :- tablero(Columnas, T), kPiezas(Columnas, Piezas), ubicarPiezas(T, Poda, Piezas).
