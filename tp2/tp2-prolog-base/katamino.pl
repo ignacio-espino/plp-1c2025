@@ -33,6 +33,10 @@ tableroGenerico(N,M,[F|T]) :- N>0, fila(M,F), N1 is N-1, tableroGenerico(N1,M,T)
 tablero(K,T) :- tableroGenerico(5, K, T).
 
 
+% Length nacho:
+% length_k(K, L) :- length(L, K).
+% tablero(K, T) :- length(T, 5), maplist(length_k(K), T).
+
 % Ejercicio 3
 %! tamaño(+T,-F,-C)
 
@@ -105,14 +109,6 @@ coordenadasLibres(T, Coords) :- findall((I, J), (coordenadas(T, (I,J)), estaLibr
 %! estaLibre(+I, +J, +T) 
 estaLibre(I, J, T) :- nth1(I, T, Fila), nth1(J, Fila, Elem), var(Elem). 
 
-
-
-% Predicados: =, sort, msort, length, nth1, nth0, member, append, last, between, is_list, list_to_set, is_set, union, intersection, subset, subtract, select, delete, reverse, atom, number, numlist, sum_list, flatten
-
-% Operaciones extra-lógicas: is, \=, ==, =:=, =\=, >, <, =<, >=, abs, max, min, mod, gcd, var, nonvar, ground, trace, notrace, make, halt
-
-% Metapredicados: bagof, setof, findall, maplist, include, not, forall, asserta, assertz, retract, retractall, listing, limit, help
-
-
-
-
+% Ejercicio 12
+% sublista(-Descartar, ?Tomar, +L, +R)
+% es reversible . es trivial (?)
