@@ -55,3 +55,11 @@ tomar(N, [_|T], PS) :- hayAlMenos(N, T), tomar(N, T, PS).
 
 % hayAlMenos(+N, +L)
 hayAlMenos(N, L) :- length(L, LLen), LLen >= N.
+
+% Ejercicio 6
+%! seccionTablero(+T, +ALTO, +ANCHO, +IJ, ?ST)
+
+seccionTablero(T, ALTO, ANCHO, (I,J), ST) :- Iant is I-1, sublista(Iant, ALTO, T, R1), Jant is J-1, cortarFilas(R1, ANCHO, Jant, ST).
+
+cortarFilas([], _, _, []).
+cortarFilas([Fila1|RestoTablero], ANCHO, J, [Fila1Res|RestoRes]) :- sublista(J, ANCHO, Fila1 , Fila1Res), cortarFilas(RestoTablero, ANCHO, J, RestoRes). 
