@@ -49,7 +49,7 @@ coordenadas(T,(I,J)) :- tamaño(T, F, C), between(1, F, I), between(1, C, J).
 kPiezas(K, PS) :- nombrePiezas(L), tomar(K, L, PS).
 
 %! tomar(+N, +Universo, -Seleccion)
-tomar(0, _, []).
+tomar(0, [], []).  % por qué esto da repetidos?? (tomar(0, _, []).)
 tomar(N, [H|T], [H|PS]) :- Nant is N-1, hayAlMenos(Nant, T), tomar(Nant, T, PS). 
 tomar(N, [_|T], PS) :- hayAlMenos(N, T), tomar(N, T, PS). 
 
@@ -75,9 +75,44 @@ ubicarPieza(T, Id) :- pieza(Id, Pieza), tamaño(Pieza, AltoPieza, AnchoPieza),
 %! ubicarPiezas(+Tablero, +Poda, +Identificadores)
 ubicarPiezas(T, Poda, Ids) :- poda(Poda, T), maplist(ubicarPieza(T), Ids).
 
-poda(sinPoda, _).
 
 % Ejercicio 9
 %! llenarTablero(+Poda, +Columnas, -Tablero).
-
 llenarTablero(Poda, Columnas, T) :- tablero(Columnas, T), kPiezas(Columnas, Piezas), ubicarPiezas(T, Poda, Piezas).
+
+% Ejercicio 10
+cantSoluciones(Poda, Columnas, N) :- findall(T, llenarTablero(Poda, Columnas, T), TS), length(TS, N).
+
+% time(cantSoluciones(sinPoda, 3, N)).
+% 36,053,324 inferences, 11.168 CPU in 11.454 seconds (97% CPU, 3228415 Lips)
+% N = 28.
+
+% time(cantSoluciones(sinPoda, 4, N)).
+
+% Ejercicio 11
+poda(sinPoda, _).
+poda(podaMod5, T) :- todosGruposLibresModulo5(T).
+
+%! todosGruposLibresModulo5(+T)
+todosGruposLibresModulo5(T) :- coordenadasLibres(T, Coords), agrupar(Coords, Grupos), maplist(grupoDivisiblePor5, Grupos).
+
+%! grupoDivisiblePor5(+Grupo)
+grupoDivisiblePor5(Grupo) :- length(Grupo, LenGrupo), mod(LenGrupo, 5) =:= 0.
+
+%! coordenadasLibres(+T, -Coordenadas)
+coordenadasLibres(T, Coords) :- findall((I, J), (coordenadas(T, (I,J)), estaLibre(I, J, T)), Coords).
+
+%! estaLibre(+I, +J, +T) 
+estaLibre(I, J, T) :- nth1(I, T, Fila), nth1(J, Fila, Elem), var(Elem). 
+
+
+
+% Predicados: =, sort, msort, length, nth1, nth0, member, append, last, between, is_list, list_to_set, is_set, union, intersection, subset, subtract, select, delete, reverse, atom, number, numlist, sum_list, flatten
+
+% Operaciones extra-lógicas: is, \=, ==, =:=, =\=, >, <, =<, >=, abs, max, min, mod, gcd, var, nonvar, ground, trace, notrace, make, halt
+
+% Metapredicados: bagof, setof, findall, maplist, include, not, forall, asserta, assertz, retract, retractall, listing, limit, help
+
+
+
+
