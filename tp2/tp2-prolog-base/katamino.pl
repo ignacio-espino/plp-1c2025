@@ -49,7 +49,7 @@ coordenadas(T,(I,J)) :- tamaño(T, F, C), between(1, F, I), between(1, C, J).
 kPiezas(K, PS) :- nombrePiezas(L), tomar(K, L, PS).
 
 %! tomar(+N, +Universo, -Seleccion)
-tomar(0, [], []).
+tomar(0, _, []).
 tomar(N, [H|T], [H|PS]) :- Nant is N-1, hayAlMenos(Nant, T), tomar(Nant, T, PS). 
 tomar(N, [_|T], PS) :- hayAlMenos(N, T), tomar(N, T, PS). 
 
