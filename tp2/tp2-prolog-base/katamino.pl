@@ -71,3 +71,9 @@ ubicarPieza(T, Id) :- pieza(Id, Pieza), tamaño(Pieza, AltoPieza, AnchoPieza),
                     tamaño(T, AltoTab, AnchoTab), between(1, AltoTab, I), between(1, AnchoTab, J),
                     seccionTablero(T, AltoPieza, AnchoPieza, (I,J), Pieza).
 
+% Ejercicio 8
+%! ubicarPiezas(+Tablero, +Poda, +Identificadores)
+ubicarPiezas(T, Poda, Ids) :- poda(Poda, T), maplist(ubicarPieza(T), Ids).
+
+poda(sinPoda, _).
+
