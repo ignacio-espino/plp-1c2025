@@ -63,3 +63,11 @@ seccionTablero(T, ALTO, ANCHO, (I,J), ST) :- Iant is I-1, sublista(Iant, ALTO, T
 
 cortarFilas([], _, _, []).
 cortarFilas([Fila1|RestoTablero], ANCHO, J, [Fila1Res|RestoRes]) :- sublista(J, ANCHO, Fila1 , Fila1Res), cortarFilas(RestoTablero, ANCHO, J, RestoRes). 
+
+% Ejercicio 7
+
+%! ubicarPieza(+Tablero, +Identificador)
+ubicarPieza(T, Id) :- pieza(Id, Pieza), tamaño(Pieza, AltoPieza, AnchoPieza), 
+                    tamaño(T, AltoTab, AnchoTab), between(1, AltoTab, I), between(1, AnchoTab, J),
+                    seccionTablero(T, AltoPieza, AnchoPieza, (I,J), Pieza).
+
